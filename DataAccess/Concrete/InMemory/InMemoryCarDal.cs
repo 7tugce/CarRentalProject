@@ -1,12 +1,5 @@
 ﻿using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace DataAccess.Concrete.InMemory
 {// bellekte verimiz var biz onu yönetiyoruz.
@@ -38,7 +31,17 @@ namespace DataAccess.Concrete.InMemory
 
         public void Delete(Car car)
         {
-            throw new NotImplementedException();
+            //Car carToDelete= null;
+            //foreach (var c in _cars)
+            //{
+            //    if(car.Id == c.Id)
+            //    {
+            //        carToDelete = c;    
+            //    }
+            //} bununyerine LINQ kullanıyoruz
+
+            Car carToDelete  = _cars.SingleOrDefault(c => c.Id == car.Id);
+            _cars.Remove(carToDelete);  
         }
 
         public List<Car> GetAll()
@@ -46,14 +49,32 @@ namespace DataAccess.Concrete.InMemory
           return _cars; // veritabanını olduğu gibi döndür
         }
 
-        public void GetById(int id)
-        {
-              throw new NotImplementedException();
-        }
+      
+
 
         public void Update(Car car)
         {
-          
+            Car carToUpdate = _cars.SingleOrDefault(c => c.Id == car.Id);
+            carToUpdate.DailyPrice = car.DailyPrice;
+            carToUpdate.Description = car.Description;  
+            carToUpdate.ModelYear= car.ModelYear;
+            carToUpdate.BrandId = car.BrandId;  
+            carToUpdate.ColorId = car.ColorId;  
+
+        }
+
+        List<Car> GetById(int id)
+        {
+            //Car carToGet = _cars.SingleOrDefault(c => c.Id == id);
+            //return carToGet;
+            return _cars.Where(c => c.Id == id).ToList();
+        }
+
+        List<Car> ICarDal.GetById(int id)
+        {
+            //Car carToGet = _cars.SingleOrDefault(c => c.Id == id);
+            //return carToGet;
+            return _cars.Where(c => c.Id == id).ToList();
         }
     }
 }
